@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class LegacyGame : MonoBehaviour
 {
     public int width = 16;
     public int height = 16;
     public int mineCount = 32;
 
-    private Board board;
-    private Cell[,] state;
+    private LegacyBoard board;
+    private LegacyCell[,] state;
     private bool gameover;
 
     //keeps the mine amount between 0 and the total area of the board
@@ -18,7 +18,7 @@ public class Game : MonoBehaviour
 
     private void Awake()
     {
-        board = GetComponentInChildren<Board>();
+        board = GetComponentInChildren<LegacyBoard>();
     }
 
     private void Start()
@@ -32,10 +32,10 @@ public class Game : MonoBehaviour
     //the board is drawn
     private void NewGame()
     {
-        state = new Cell[width, height];
+        state = new LegacyCell[width, height];
         gameover = false;
 
-        GenerateCells();
+        GenerateLegacyCells();
         GenerateMines();
         GenerateNumbers();
 
@@ -45,15 +45,15 @@ public class Game : MonoBehaviour
 
     //generates cells with positions at specified x and y coords
     //initializes all created cells to empty
-    private void GenerateCells()
+    private void GenerateLegacyCells()
     {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Cell cell = new Cell();
+                LegacyCell cell = new LegacyCell();
                 cell.position = new Vector3Int(x, y, 0);
-                cell.type = Cell.Type.Empty;
+                cell.type = LegacyCell.Type.Empty;
                 state[x, y] = cell;
             }
         }
@@ -68,7 +68,7 @@ public class Game : MonoBehaviour
             int x = Random.Range(0, width);
             int y = Random.Range(0, height);
 
-            while (state[x, y].type == Cell.Type.Mine)
+            while (state[x, y].type == LegacyCell.Type.Mine)
             {
                 x++;
 
@@ -84,7 +84,7 @@ public class Game : MonoBehaviour
                 }
             }
 
-            state[x, y].type = Cell.Type.Mine;
+            state[x, y].type = LegacyCell.Type.Mine;
         }
     }
 
@@ -95,9 +95,9 @@ public class Game : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Cell cell = state[x, y];
+                LegacyCell cell = state[x, y];
 
-                if (cell.type == Cell.Type.Mine)
+                if (cell.type == LegacyCell.Type.Mine)
                 {
                     continue;
                 }
@@ -106,7 +106,7 @@ public class Game : MonoBehaviour
                 
                 if (cell.number > 0)
                 {
-                    cell.type = Cell.Type.Number;
+                    cell.type = LegacyCell.Type.Number;
                 }
 
                 state[x, y] = cell;
@@ -131,7 +131,7 @@ public class Game : MonoBehaviour
                 int x = cellX + adjacentX;
                 int y = cellY + adjacentY;
 
-                if (GetCell(x, y).type == Cell.Type.Mine)
+                if (GetLegacyCell(x, y).type == LegacyCell.Type.Mine)
                 {
                     count++;
                 }
@@ -168,9 +168,9 @@ public class Game : MonoBehaviour
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
-        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+        LegacyCell cell = GetLegacyCell(cellPosition.x, cellPosition.y);
 
-        if (cell.type == Cell.Type.Invalid || cell.revealed)
+        if (cell.type == LegacyCell.Type.Invalid || cell.revealed)
         {
             return;
         }
@@ -185,20 +185,20 @@ public class Game : MonoBehaviour
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
-        Cell cell = GetCell(cellPosition.x, cellPosition.y);
+        LegacyCell cell = GetLegacyCell(cellPosition.x, cellPosition.y);
 
-        if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
+        if (cell.type == LegacyCell.Type.Invalid || cell.revealed || cell.flagged)
         {
             return;
         }
 
         switch (cell.type)
         {
-            case Cell.Type.Mine:
+            case LegacyCell.Type.Mine:
                 Explode(cell);
                 break;
 
-            case Cell.Type.Empty:
+            case LegacyCell.Type.Empty:
                 Flood(cell);
                 CheckWinCondition();
                 break;
@@ -214,32 +214,26 @@ public class Game : MonoBehaviour
     }
 
     //used to reveal all adjacent empty spaces (flood the area) to an empty space
-    private void Flood(Cell cell)
+    private void Flood(LegacyCell cell)
     {
         if (cell.revealed) return;
-        if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) return;
+        if (cell.type == LegacyCell.Type.Mine || cell.type == LegacyCell.Type.Invalid) return;
 
         cell.revealed = true;
         state[cell.position.x, cell.position.y] = cell;
 
-        if (cell.type == Cell.Type.Empty)
+        if (cell.type == LegacyCell.Type.Empty)
         {
-            Flood(GetCell(cell.position.x - 1, cell.position.y));
-            Flood(GetCell(cell.position.x + 1, cell.position.y));
-            Flood(GetCell(cell.position.x, cell.position.y - 1));
-            Flood(GetCell(cell.position.x, cell.position.y + 1));
-
-            // flood diagonally adjacent squares
-            Flood(GetCell(cell.position.x - 1, cell.position.y - 1));
-            Flood(GetCell(cell.position.x - 1, cell.position.y + 1));
-            Flood(GetCell(cell.position.x + 1, cell.position.y - 1));
-            Flood(GetCell(cell.position.x + 1, cell.position.y + 1));
+            Flood(GetLegacyCell(cell.position.x - 1, cell.position.y));
+            Flood(GetLegacyCell(cell.position.x + 1, cell.position.y));
+            Flood(GetLegacyCell(cell.position.x, cell.position.y - 1));
+            Flood(GetLegacyCell(cell.position.x, cell.position.y + 1));
         }
     }
 
     //if a mine is clicked then the mine explodes, showing all other mines on the board
     //the user loses and the game ends
-    private void Explode(Cell cell)
+    private void Explode(LegacyCell cell)
     {
         Debug.Log("Game Over!");
         gameover = true;
@@ -254,7 +248,7 @@ public class Game : MonoBehaviour
             {
                 cell = state[x, y];
 
-                if (cell.type == Cell.Type.Mine)
+                if (cell.type == LegacyCell.Type.Mine)
                 {
                     cell.revealed = true;
                     state[x, y] = cell;
@@ -271,9 +265,9 @@ public class Game : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             { 
-                Cell cell = state[x, y];
+                LegacyCell cell = state[x, y];
                 
-                if (cell.type != Cell.Type.Mine && !cell.revealed)
+                if (cell.type != LegacyCell.Type.Mine && !cell.revealed)
                 {
                     return;
                 }
@@ -287,9 +281,9 @@ public class Game : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Cell cell = state[x, y];
+                LegacyCell cell = state[x, y];
 
-                if (cell.type == Cell.Type.Mine)
+                if (cell.type == LegacyCell.Type.Mine)
                 {
                     cell.flagged = true;
                     state[x, y] = cell;
@@ -300,14 +294,14 @@ public class Game : MonoBehaviour
 
     //returns the cell clicked on if it's valid
     //returns a new (and thus invalid) cell if not
-    private Cell GetCell(int x, int y)
+    private LegacyCell GetLegacyCell(int x, int y)
     {
         if (IsValid(x, y))
         {
             return state[x, y];
         } else
         {
-            return new Cell();
+            return new LegacyCell();
         }
     }
 
