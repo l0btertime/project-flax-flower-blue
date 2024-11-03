@@ -1,10 +1,12 @@
 using UnityEngine;
+using TMPro;
 
 public class Game : MonoBehaviour
 {
     public int width = 16;
     public int height = 16;
     public int mineCount = 32;
+    public GameObject menu;
 
     private Board board;
     private Cell[,] state;
@@ -30,7 +32,7 @@ public class Game : MonoBehaviour
     //cells, mines, and numbers are generated
     //the camera is set to the center of the board
     //the board is drawn
-    private void NewGame()
+    public void NewGame()
     {
         state = new Cell[width, height];
         gameover = false;
@@ -241,7 +243,8 @@ public class Game : MonoBehaviour
     //the user loses and the game ends
     private void Explode(Cell cell)
     {
-        Debug.Log("Game Over!");
+        menu.SetActive(true);
+        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose.";
         gameover = true;
 
         cell.revealed = true;
@@ -280,7 +283,8 @@ public class Game : MonoBehaviour
             }
         }
 
-        Debug.Log("Winner!");
+        menu.SetActive(true);
+        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
         gameover = true;
 
         for (int x = 0; x < width; x++)
