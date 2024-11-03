@@ -5,21 +5,21 @@ public class SceneLoader : MonoBehaviour
 {
     // this script uses a singleton pattern
     // a static object is instantiated so that there will only ever be one sceneloader
-    public static SceneLoader loader;
+    public static SceneLoader sharedInstance;
 
     private void Awake()
     {
         // sets up the singleton object
-        if(loader == null)
+        if(sharedInstance == null)
         {
-            loader = this;
+            sharedInstance = this;
+            // ensures sceneloader exists outside of other scenes, so it is not unloaded ever
+            DontDestroyOnLoad(this);
         }
         else
         {
             Destroy(this.gameObject);
         }
-        // ensures sceneloader exists outside of other scenes, so it is not unloaded ever
-        DontDestroyOnLoad(this);
     }
 
     public static void LoadScene(string sceneName)
@@ -30,5 +30,10 @@ public class SceneLoader : MonoBehaviour
     public static void LoadScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);
+    }
+
+    public static void QuitGame()
+    {
+        Application.Quit();
     }
 }
