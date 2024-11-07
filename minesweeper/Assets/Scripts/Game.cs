@@ -209,6 +209,7 @@ public class Game : MonoBehaviour
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
+                AudioManager.Play("Dig");
                 break;
         }
         
