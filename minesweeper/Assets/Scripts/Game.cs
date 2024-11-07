@@ -171,12 +171,12 @@ public class Game : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
-
+       
         if (cell.type == Cell.Type.Invalid || cell.revealed)
         {
             return;
         }
-
+        if (cell.flagged) AudioManager.Play("Flag"); else AudioManager.Play("FlagDown");
         cell.flagged = !cell.flagged;
         state[cellPosition.x, cellPosition.y] = cell;
         board.Draw(state);
@@ -197,19 +197,21 @@ public class Game : MonoBehaviour
         switch (cell.type)
         {
             case Cell.Type.Mine:
+                AudioManager.Play("Explode");
                 Explode(cell);
                 break;
 
             case Cell.Type.Empty:
+                AudioManager.Play("Flood");
                 Flood(cell);
                 CheckWinCondition();
                 break;
 
             default:
+                AudioManager.Play("Dig");
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
-                AudioManager.Play("Dig");
                 break;
         }
         
@@ -284,6 +286,7 @@ public class Game : MonoBehaviour
             }
         }
 
+        AudioManager.Play("Win");
         menu.SetActive(true);
         menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
         gameover = true;
