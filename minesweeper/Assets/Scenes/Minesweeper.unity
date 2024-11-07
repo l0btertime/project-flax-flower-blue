@@ -1942,6 +1942,7 @@ MonoBehaviour:
   height: 8
   mineCount: 10
   menu: {fileID: 1547836348}
+  screenShake: {fileID: 51133450}
 --- !u!1001 &1699378632969600161
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2024,7 +2025,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 4d292f52c2a44e140a7dec2ebf95dda6, type: 3}
     - target: {fileID: 7383433771671910470, guid: 91129e97af62538498c7b22e56cdf4d4, type: 3}
       propertyPath: Sounds.Array.data[3].name
-      value: Flag
+      value: FlagDown
       objectReference: {fileID: 0}
     - target: {fileID: 7383433771671910470, guid: 91129e97af62538498c7b22e56cdf4d4, type: 3}
       propertyPath: Sounds.Array.data[4].clip
@@ -2040,7 +2041,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 7f4bbd72d97ff214db9c2c4c9206a22b, type: 3}
     - target: {fileID: 7383433771671910470, guid: 91129e97af62538498c7b22e56cdf4d4, type: 3}
       propertyPath: Sounds.Array.data[5].name
-      value: FlagDown
+      value: Flag
       objectReference: {fileID: 0}
     - target: {fileID: 7383433771671910470, guid: 91129e97af62538498c7b22e56cdf4d4, type: 3}
       propertyPath: Sounds.Array.data[0].pitch

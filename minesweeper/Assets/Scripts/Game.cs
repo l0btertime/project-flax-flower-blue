@@ -212,7 +212,7 @@ public class Game : MonoBehaviour
 
             default:
                 AudioManager.Play("Dig");
-                screenShake.Shake(0.02f, 0.02f);
+                screenShake.Shake(0.05f, 0.05f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
