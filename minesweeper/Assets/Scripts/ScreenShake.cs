@@ -15,7 +15,11 @@ public class ScreenShake : MonoBehaviour
         //if(Input.GetMouseButtonDown(0)) StartCoroutine(Shake(0.1f, 0.04f, 0.5f));
     }
 
-    private IEnumerator Shake(float duration, float interval, float startSize)
+    public void Shake(float duration, float intensity)
+    {
+        StartCoroutine(ShakeCoroutine(duration, 0.04f, intensity));
+    }
+    private IEnumerator ShakeCoroutine(float duration, float interval, float startSize)
     {
         float timer = duration;
         

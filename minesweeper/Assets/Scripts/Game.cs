@@ -7,6 +7,7 @@ public class Game : MonoBehaviour
     public int height = 16;
     public int mineCount = 32;
     public GameObject menu;
+    public ScreenShake screenShake;
 
     private Board board;
     private Cell[,] state;
@@ -198,17 +199,20 @@ public class Game : MonoBehaviour
         {
             case Cell.Type.Mine:
                 AudioManager.Play("Explode");
+                screenShake.Shake(0.4f, 1.5f);
                 Explode(cell);
                 break;
 
             case Cell.Type.Empty:
                 AudioManager.Play("Flood");
+                screenShake.Shake(0.15f, 0.5f);
                 Flood(cell);
                 CheckWinCondition();
                 break;
 
             default:
                 AudioManager.Play("Dig");
+                screenShake.Shake(0.02f, 0.02f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
