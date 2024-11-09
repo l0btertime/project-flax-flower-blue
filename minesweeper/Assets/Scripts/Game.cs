@@ -205,14 +205,14 @@ public class Game : MonoBehaviour
 
             case Cell.Type.Empty:
                 AudioManager.Play("Flood");
-                screenShake.Shake(0.15f, 0.5f);
+                screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
                 break;
 
             default:
                 AudioManager.Play("Dig");
-                screenShake.Shake(0.05f, 0.05f);
+                //screenShake.Shake(0.1f, 0.04f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
