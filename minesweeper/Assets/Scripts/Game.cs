@@ -7,6 +7,7 @@ public class Game : MonoBehaviour
     public int height = 16;
     public int mineCount = 32;
     public GameObject menu;
+    public ScreenShake screenShake;
 
     private Board board;
     private Cell[,] state;
@@ -171,12 +172,12 @@ public class Game : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
-
+       
         if (cell.type == Cell.Type.Invalid || cell.revealed)
         {
             return;
         }
-
+        if (cell.flagged) AudioManager.Play("Flag"); else AudioManager.Play("FlagDown");
         cell.flagged = !cell.flagged;
         state[cellPosition.x, cellPosition.y] = cell;
         board.Draw(state);
@@ -197,15 +198,21 @@ public class Game : MonoBehaviour
         switch (cell.type)
         {
             case Cell.Type.Mine:
+                AudioManager.Play("Explode");
+                screenShake.Shake(0.4f, 1.5f);
                 Explode(cell);
                 break;
 
             case Cell.Type.Empty:
+                AudioManager.Play("Flood");
+                screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
                 break;
 
             default:
+                AudioManager.Play("Dig");
+                //screenShake.Shake(0.1f, 0.04f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 CheckWinCondition();
@@ -283,6 +290,7 @@ public class Game : MonoBehaviour
             }
         }
 
+        AudioManager.Play("Win");
         menu.SetActive(true);
         menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
         gameover = true;
