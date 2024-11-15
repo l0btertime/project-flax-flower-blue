@@ -13,6 +13,10 @@ public class Game : MonoBehaviour
     private Cell[,] state;
     private bool gameover;
 
+    public int PPU;
+    public int padding;
+    
+
     //keeps the mine amount between 0 and the total area of the board
     private void OnValidate()
     {
@@ -24,8 +28,24 @@ public class Game : MonoBehaviour
         board = GetComponentInChildren<Board>();
     }
 
+    private void FixSize()
+    {
+        float defaultSize = 16;//- padding;
+        float size = width;//- padding;
+        float scale = defaultSize / size;
+        transform.GetChild(0).localScale = new Vector3(1, 1, 1) * scale;
+        float offset = size - defaultSize;
+        transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f + new Vector3(0, -1f, 0);
+    }
     private void Start()
     {
+        /*
+        int size = Random.Range(1, 50);
+        width = size;
+        height = size;
+        mineCount = (int) ((float)size * (float)size * 0.3f);
+        */
+        FixSize();
         NewGame();
     }
 
@@ -199,12 +219,14 @@ public class Game : MonoBehaviour
         {
             case Cell.Type.Mine:
                 AudioManager.Play("Explode");
-                screenShake.Shake(0.4f, 1.5f);
+                screenShake.Shake(0.4f, 1.2f);
+                Debug.Log("ShakeMine");
                 Explode(cell);
                 break;
 
             case Cell.Type.Empty:
                 AudioManager.Play("Flood");
+                Debug.Log("ShakeFlood");
                 screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
