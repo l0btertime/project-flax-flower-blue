@@ -35,14 +35,16 @@ public class Game : MonoBehaviour
         float scale = defaultSize / size;
         transform.GetChild(0).localScale = new Vector3(1, 1, 1) * scale;
         float offset = size - defaultSize;
-        transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f;
+        transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f + new Vector3(0, -1f, 0);
     }
     private void Start()
     {
+        /*
         int size = Random.Range(1, 50);
         width = size;
         height = size;
         mineCount = (int) ((float)size * (float)size * 0.3f);
+        */
         FixSize();
         NewGame();
     }
