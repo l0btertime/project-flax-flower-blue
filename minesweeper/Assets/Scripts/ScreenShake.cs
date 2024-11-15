@@ -25,12 +25,13 @@ public class ScreenShake : MonoBehaviour
         
         while (timer > 0)
         {
-            timer -= Time.deltaTime;
             float size = Mathf.Lerp(0, startSize, (timer / duration));
             transform.position = PosInCube(size);
-            
-            yield return new WaitForSeconds(Random.Range(0f, interval));
+            float time = Random.Range(0f, interval);
+            timer -= time;
+            yield return new WaitForSeconds(time);
         }
+        Debug.Log("DoneShaking");
     }
 
     private Vector3 PosInCube(float size)
