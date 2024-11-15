@@ -2014,9 +2014,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd9b6e953c48615428cb62a4f4a774fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 12
-  height: 12
-  mineCount: 0
+  width: 16
+  height: 16
+  mineCount: 20
   menu: {fileID: 1547836348}
   screenShake: {fileID: 51133450}
   PPU: 16
