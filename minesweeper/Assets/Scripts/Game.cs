@@ -1,3 +1,5 @@
+using System.Collections;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
@@ -6,8 +8,10 @@ public class Game : MonoBehaviour
     public int width = 16;
     public int height = 16;
     public int mineCount = 32;
+    public int time;
     public GameObject menu;
     public ScreenShake screenShake;
+    public Text timerText;
 
     private Board board;
     private Cell[,] state;
@@ -64,6 +68,24 @@ public class Game : MonoBehaviour
 
         Camera.main.transform.position = new Vector3(width / 2f, height / 2f, -10f);
         board.Draw(state);
+
+        StopAllCoroutines();
+        StartCoroutine(Timer());
+    }
+
+    private IEnumerator Timer()
+    {
+        time = 0;
+        int currentTime = time;
+        timerText.text = time.ToString();
+
+        while (time == currentTime)
+        {
+            yield return new WaitForSeconds(1);
+            time++;
+            currentTime = time;
+            timerText.text = time.ToString();
+        }
     }
 
     //generates cells with positions at specified x and y coords
