@@ -47,7 +47,7 @@ MonoBehaviour:
   Sounds:
   - name: Dig
     clip: {fileID: 8300000, guid: f4b9fdbd56c2096458383a197bef041b, type: 3}
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 0
     fadeOnStop: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 4181e363dfb39914297f28cf7e9922ee, type: 3}
     volume: 1
     pitch: 1
-    loop: 1
+    loop: 0
     fadeOnStop: 0
     StopOnLoad: 1
     source: {fileID: 0}
