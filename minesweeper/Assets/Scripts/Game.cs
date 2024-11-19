@@ -52,7 +52,7 @@ public class Game : MonoBehaviour
         height = size;
         mineCount = (int) ((float)size * (float)size * 0.3f);
         */
-        FixSize();
+        //FixSize();
         board.FixSize(width);
         board.GenerateBoard(width, height);
         NewGame();

@@ -26,7 +26,8 @@ public class Board : MonoBehaviour
     public TileRegistry defaultTiles;
     public TileRegistry lightTiles;
     public TileRegistry darkTiles;
-    public float cellSize = 1; // the scale of each tile
+    private float cellSize = 1; // the scale of each tile
+    private float offset = 0;
     public GameObject tileObject;
     public GameObject[,] tiles;
     
@@ -162,6 +163,7 @@ public class Board : MonoBehaviour
     {
         float defaultSize = 16;
         float scale = defaultSize / size;
+        offset = 0.5f * (size - defaultSize);
         cellSize = scale;
     }
     public void GenerateBoard(int width, int height)
@@ -171,7 +173,7 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                GameObject newTile = Instantiate(tileObject, cellSize * CellToWorld(new Vector2Int(x, y)), tileObject.transform.rotation);
+                GameObject newTile = Instantiate(tileObject, cellSize * 0.5f * CellToWorld(new Vector2Int(x, y)) + new Vector2(offset, offset - 1f), tileObject.transform.rotation);
                 if (isDark(x, y)) SetTile(newTile, darkTiles.tileUnknown.sprite, false); 
                 else SetTile(newTile, lightTiles.tileUnknown.sprite, false);
                 newTile.transform.SetParent(this.transform);
