@@ -245,13 +245,11 @@ public class Game : MonoBehaviour
             case Cell.Type.Mine:
                 AudioManager.Play("Explode");
                 screenShake.Shake(0.4f, 1.2f);
-                Debug.Log("ShakeMine");
                 Explode(cell);
                 break;
 
             case Cell.Type.Empty:
                 AudioManager.Play("Flood");
-                Debug.Log("ShakeFlood");
                 screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();

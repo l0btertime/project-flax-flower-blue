@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1e1d0ceaca340e94c9ae906d45dfb87f
+guid: b72d812546f76a94ba97ba253222d406
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -347702476747834141
-    second: Tile1_0
+      213: 9098448135376270372
+    second: TileEmpty_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,11 +109,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 32
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tile1_0
+      name: TileEmpty_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3ecfbe98076bc2bf0800000000000000
-      internalID: -347702476747834141
+      spriteID: 424fa6c9f5e244e70800000000000000
+      internalID: 9098448135376270372
       vertices: []
       indices: 
       edges: []
@@ -148,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tile1_0: -347702476747834141
+      TileEmpty_0: 9098448135376270372
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
