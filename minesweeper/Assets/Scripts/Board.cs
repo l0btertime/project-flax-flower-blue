@@ -49,7 +49,8 @@ public class Board : MonoBehaviour
                 Cell cell = state[x, y];
                 Tile tile = GetTile(cell, isDark(x, y) ? lightTiles : darkTiles);
                 if (tile == null) tile = GetTile(cell, defaultTiles);
-                tilemap.SetTile(cell.position, tile);
+                bool underground = false;
+                SetTile((Vector2Int) cell.position, tile.sprite, underground);
             }
         }
     }
@@ -114,13 +115,14 @@ public class Board : MonoBehaviour
 
     public Vector2Int WorldToCell(Vector2 worldPos)
     {
+        worldPos = worldPos - new Vector2(offset, offset - 1f);
         Vector2Int cellPos = new Vector2Int((int)(worldPos.x / cellSize), 
-                                            (int)(worldPos.x / cellSize));
+                                            (int)(worldPos.y / cellSize));
         return cellPos;
     }
     public Vector2 CellToWorld(Vector2Int cellPos)
     {
-        Vector2 worldPos = (Vector2) cellPos * cellSize;
+        Vector2 worldPos = (cellSize * (Vector2)cellPos) + new Vector2(offset, offset - 1f);
         return worldPos;
     }
 
@@ -173,7 +175,7 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                GameObject newTile = Instantiate(tileObject, cellSize * 0.5f * CellToWorld(new Vector2Int(x, y)) + new Vector2(offset, offset - 1f), tileObject.transform.rotation);
+                GameObject newTile = Instantiate(tileObject, CellToWorld(new Vector2Int(x,y)), tileObject.transform.rotation);
                 if (isDark(x, y)) SetTile(newTile, darkTiles.tileUnknown.sprite, false); 
                 else SetTile(newTile, lightTiles.tileUnknown.sprite, false);
                 newTile.transform.SetParent(this.transform);

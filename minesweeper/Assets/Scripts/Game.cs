@@ -217,7 +217,7 @@ public class Game : MonoBehaviour
     private void Flag()
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
+        Vector3Int cellPosition = (Vector3Int) board.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
        
         if (cell.type == Cell.Type.Invalid || cell.revealed)
@@ -234,7 +234,7 @@ public class Game : MonoBehaviour
     private void Reveal()
     {
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int cellPosition = board.tilemap.WorldToCell(worldPosition);
+        Vector3Int cellPosition = (Vector3Int) board.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
 
         if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
@@ -255,7 +255,7 @@ public class Game : MonoBehaviour
                 screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
-                GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.tilemap.CellToWorld(cellPosition), lightParticles.transform.rotation);
+                GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
                 particle.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
                 break;
 
@@ -264,7 +264,7 @@ public class Game : MonoBehaviour
                 //screenShake.Shake(0.1f, 0.04f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
-                GameObject particle2 = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.tilemap.CellToWorld(cellPosition), lightParticles.transform.rotation);
+                GameObject particle2 = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
                 particle2.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
                 CheckWinCondition();
                 break;
