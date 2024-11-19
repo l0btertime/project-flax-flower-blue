@@ -26,7 +26,7 @@ public class Board : MonoBehaviour
     public TileRegistry defaultTiles;
     public TileRegistry lightTiles;
     public TileRegistry darkTiles;
-    private float cellSize = 1; // the scale of each tile
+    public float cellSize = 1; // the scale of each tile
     private float offset = 0;
     public GameObject tileObject;
     public GameObject[,] tiles;

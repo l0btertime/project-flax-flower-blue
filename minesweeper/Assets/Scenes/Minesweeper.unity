@@ -2158,7 +2158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 8
   height: 8
-  mineCount: 4
+  mineCount: 10
   time: 0
   menu: {fileID: 1547836348}
   screenShake: {fileID: 51133450}

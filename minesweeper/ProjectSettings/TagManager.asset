@@ -47,5 +47,8 @@ TagManager:
   - name: Overground
     uniqueID: 2865398035
     locked: 0
+  - name: Effects
+    uniqueID: 633256455
+    locked: 0
   m_RenderingLayers:
   - Default

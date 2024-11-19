@@ -256,7 +256,7 @@ public class Game : MonoBehaviour
                 Flood(cell);
                 CheckWinCondition();
                 GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
-                particle.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
+                particle.GetComponent<ParticleSystem>().startSize = board.cellSize;
                 break;
 
             default:
@@ -265,7 +265,7 @@ public class Game : MonoBehaviour
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
                 GameObject particle2 = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
-                particle2.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
+                particle2.GetComponent<ParticleSystem>().startSize = board.cellSize;
                 CheckWinCondition();
                 break;
         }
