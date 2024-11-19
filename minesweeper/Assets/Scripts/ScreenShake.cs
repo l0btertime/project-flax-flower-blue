@@ -31,7 +31,6 @@ public class ScreenShake : MonoBehaviour
             timer -= time;
             yield return new WaitForSeconds(time);
         }
-        Debug.Log("DoneShaking");
     }
 
     private Vector3 PosInCube(float size)
