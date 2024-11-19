@@ -19,6 +19,9 @@ public class Game : MonoBehaviour
 
     public int PPU;
     public int padding;
+
+    public GameObject lightParticles;
+    public GameObject darkParticles;
     
 
     //keeps the mine amount between 0 and the total area of the board
@@ -252,6 +255,8 @@ public class Game : MonoBehaviour
                 screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
+                GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.tilemap.CellToWorld(cellPosition), lightParticles.transform.rotation);
+                particle.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
                 break;
 
             default:
@@ -259,6 +264,8 @@ public class Game : MonoBehaviour
                 //screenShake.Shake(0.1f, 0.04f);
                 cell.revealed = true;
                 state[cellPosition.x, cellPosition.y] = cell;
+                GameObject particle2 = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.tilemap.CellToWorld(cellPosition), lightParticles.transform.rotation);
+                particle2.GetComponent<ParticleSystem>().startSize = transform.GetChild(0).localScale.x;
                 CheckWinCondition();
                 break;
         }
