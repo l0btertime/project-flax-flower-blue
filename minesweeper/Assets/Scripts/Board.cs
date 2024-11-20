@@ -49,10 +49,21 @@ public class Board : MonoBehaviour
                 Cell cell = state[x, y];
                 Tile tile = GetTile(cell, isDark(x, y) ? lightTiles : darkTiles);
                 if (tile == null) tile = GetTile(cell, defaultTiles);
-                bool underground = false;
+                bool underground = Underground(tile);
                 SetTile((Vector2Int) cell.position, tile.sprite, underground);
             }
         }
+    }
+
+    private bool Underground(Tile tile)
+    {
+        bool underground = true;
+        TileRegistry registry = darkTiles;
+        if (tile == registry.tileUnknown || tile == registry.tileFlag) underground = false;
+        registry = lightTiles;
+        if (tile == registry.tileUnknown || tile == registry.tileFlag) underground = false;
+        Debug.Log(underground);
+        return underground;
     }
 
     private Tile GetTile(Cell cell, TileRegistry registry)

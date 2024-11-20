@@ -255,8 +255,8 @@ public class Game : MonoBehaviour
                 screenShake.Shake(0.16f, 0.3f);
                 Flood(cell);
                 CheckWinCondition();
-                GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
-                particle.GetComponent<ParticleSystem>().startSize = board.cellSize;
+                //GameObject particle = Instantiate(board.isDark(cellPosition.x, cellPosition.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int) cellPosition), lightParticles.transform.rotation);
+                //particle.GetComponent<ParticleSystem>().startSize = board.cellSize;
                 break;
 
             default:
@@ -281,6 +281,9 @@ public class Game : MonoBehaviour
 
         cell.revealed = true;
         state[cell.position.x, cell.position.y] = cell;
+
+        GameObject particle = Instantiate(board.isDark(cell.position.x, cell.position.y) ? lightParticles : darkParticles, board.CellToWorld((Vector2Int)cell.position), lightParticles.transform.rotation);
+        particle.GetComponent<ParticleSystem>().startSize = board.cellSize;
 
         if (cell.type == Cell.Type.Empty)
         {
