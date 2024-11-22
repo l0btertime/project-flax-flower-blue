@@ -2,40 +2,33 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
-public class TileRegistry
+public class SpriteRegistry
 {
-    public Tile tileUnknown;
-    public Tile tileEmpty;
-    public Tile tileMine;
-    public Tile tileExploded;
-    public Tile tileFlag;
-    public Tile tileNum1;
-    public Tile tileNum2;
-    public Tile tileNum3;
-    public Tile tileNum4;
-    public Tile tileNum5;
-    public Tile tileNum6;
-    public Tile tileNum7;
-    public Tile tileNum8;
+    public Sprite tileUnknown;
+    public Sprite tileEmpty;
+    public Sprite tileMine;
+    public Sprite tileExploded;
+    public Sprite tileFlag;
+    public Sprite tileNum1;
+    public Sprite tileNum2;
+    public Sprite tileNum3;
+    public Sprite tileNum4;
+    public Sprite tileNum5;
+    public Sprite tileNum6;
+    public Sprite tileNum7;
+    public Sprite tileNum8;
 }
 public class Board : MonoBehaviour
 {
-    public Tilemap tilemap { get; private set; } //game may need to read the tilemap but doesnt need to change it
-
     //all sprites assigned to tile types in unity
-    public TileRegistry defaultTiles;
-    public TileRegistry lightTiles;
-    public TileRegistry darkTiles;
+    public SpriteRegistry defaultTiles;
+    public SpriteRegistry lightTiles;
+    public SpriteRegistry darkTiles;
     public float cellSize = 1; // the scale of each tile
     private float offset = 0;
     public GameObject tileObject;
     public GameObject[,] tiles;
     
-
-    private void Awake()
-    {
-        tilemap = GetComponent<Tilemap>();
-    }
 
     public void Draw(Cell[,] state)
     {
@@ -47,26 +40,25 @@ public class Board : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Cell cell = state[x, y];
-                Tile tile = GetTile(cell, isDark(x, y) ? lightTiles : darkTiles);
+                Sprite tile = GetTile(cell, isDark(x, y) ? lightTiles : darkTiles);
                 if (tile == null) tile = GetTile(cell, defaultTiles);
                 bool underground = Underground(tile);
-                SetTile((Vector2Int) cell.position, tile.sprite, underground);
+                SetTile((Vector2Int) cell.position, tile, underground);
             }
         }
     }
 
-    private bool Underground(Tile tile)
+    private bool Underground(Sprite tile)
     {
         bool underground = true;
-        TileRegistry registry = darkTiles;
+        SpriteRegistry registry = darkTiles;
         if (tile == registry.tileUnknown || tile == registry.tileFlag) underground = false;
         registry = lightTiles;
         if (tile == registry.tileUnknown || tile == registry.tileFlag) underground = false;
-        Debug.Log(underground);
         return underground;
     }
 
-    private Tile GetTile(Cell cell, TileRegistry registry)
+    private Sprite GetTile(Cell cell, SpriteRegistry registry)
     {
         if (cell.revealed)
         {
@@ -81,7 +73,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private Tile GetRevealedTile(Cell cell, TileRegistry registry)
+    private Sprite GetRevealedTile(Cell cell, SpriteRegistry registry)
     {
         switch (cell.type)
         {
@@ -92,7 +84,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private Tile GetNumberTile(Cell cell, TileRegistry registry)
+    private Sprite GetNumberTile(Cell cell, SpriteRegistry registry)
     {
         switch (cell.number)
         {
@@ -187,8 +179,8 @@ public class Board : MonoBehaviour
             for (int x = 0; x < width; x++)
             {
                 GameObject newTile = Instantiate(tileObject, CellToWorld(new Vector2Int(x,y)), tileObject.transform.rotation);
-                if (isDark(x, y)) SetTile(newTile, darkTiles.tileUnknown.sprite, false); 
-                else SetTile(newTile, lightTiles.tileUnknown.sprite, false);
+                if (isDark(x, y)) SetTile(newTile, darkTiles.tileUnknown, false); 
+                else SetTile(newTile, lightTiles.tileUnknown, false);
                 newTile.transform.SetParent(this.transform);
                 newTile.transform.localScale = cellSize * new Vector3(1, 1, 1);
                 newTile.GetComponent<SpriteRenderer>().sortingOrder = (height - y) + (width - x);
