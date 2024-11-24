@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class Game : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Game : MonoBehaviour
     public int height = 16;
     public int mineCount = 32;
     public int time;
+    public bool firstClick = true;
     public GameObject menu;
     public ScreenShake screenShake;
     public Text timerText;
@@ -56,6 +58,7 @@ public class Game : MonoBehaviour
         board.FixSize(width);
         board.GenerateBoard(width, height);
         NewGame();
+
     }
 
     //state is set to an array of the specific width and height (can be set in unity)
@@ -68,14 +71,18 @@ public class Game : MonoBehaviour
         gameover = false;
 
         GenerateCells();
-        GenerateMines();
-        GenerateNumbers();
+        //GenerateMines(); !!!
+        //GenerateNumbers(); !!!
+        
+        
 
         Camera.main.transform.position = new Vector3(width / 2f, height / 2f, -10f);
         board.Draw(state);
 
         StopAllCoroutines();
         StartCoroutine(Timer());
+
+        firstClick = true;
     }
 
     private IEnumerator Timer()
@@ -115,8 +122,11 @@ public class Game : MonoBehaviour
     {
         for (int i = 0; i < mineCount; i++)
         { 
-            int x = Random.Range(0, width);
-            int y = Random.Range(0, height);
+            int x = UnityEngine.Random.Range(0, width);
+            int y = UnityEngine.Random.Range(0, height);
+
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int cellPosition = (Vector3Int)board.WorldToCell(worldPosition);
 
             while (state[x, y].type == Cell.Type.Mine)
             {
@@ -133,8 +143,50 @@ public class Game : MonoBehaviour
                     }
                 }
             }
+            if ((x == cellPosition.x &&  y == cellPosition.y))
+            {
+                i--;
+            }
+            else if((x == (cellPosition.x + 1) && y == cellPosition.y))
+            {
+                i--;
 
-            state[x, y].type = Cell.Type.Mine;
+            }
+            else if((x == (cellPosition.x - 1) && y == cellPosition.y))
+            {
+                i--;
+
+            }
+            else if((x == cellPosition.x && y == (cellPosition.y + 1)))
+            {
+                i--;
+
+            }
+            else if((x == cellPosition.x && y == (cellPosition.y - 1)))
+            {
+                i--;
+            }
+            else if ((x == cellPosition.x+1 && y == (cellPosition.y + 1)))
+            {
+                i--;
+            }
+            else if ((x == cellPosition.x + 1 && y == (cellPosition.y - 1)))
+            {
+                i--;
+            }
+            else if ((x == cellPosition.x - 1 && y == (cellPosition.y + 1)))
+            {
+                i--;
+            }
+            else if ((x == cellPosition.x - 1 && y == (cellPosition.y - 1)))
+            {
+                i--;
+            }
+            else
+            {
+                state[x, y].type = Cell.Type.Mine;
+            }
+
         }
     }
 
@@ -208,7 +260,17 @@ public class Game : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                Reveal();
+                if(firstClick == true)
+                {
+                    firstClick = false;
+                    GenerateMines();
+                    GenerateNumbers();
+                    Reveal();
+                }
+                else
+                {
+                    Reveal();
+                }
             }
         }
     }
