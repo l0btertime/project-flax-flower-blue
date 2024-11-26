@@ -13,7 +13,7 @@ public class Game : MonoBehaviour
     public bool firstClick = true;
     public GameObject menu;
     public ScreenShake screenShake;
-    public Text timerText;
+    public TextMeshProUGUI timerText;
 
     private Board board;
     private Cell[,] state;
@@ -55,7 +55,7 @@ public class Game : MonoBehaviour
         mineCount = (int) ((float)size * (float)size * 0.3f);
         */
         //FixSize();
-        board.FixSize(width);
+        board.FixSize(Mathf.Max(width, height));
         board.GenerateBoard(width, height);
         NewGame();
 
