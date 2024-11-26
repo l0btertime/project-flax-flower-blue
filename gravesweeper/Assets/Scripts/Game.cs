@@ -93,7 +93,7 @@ public class Game : MonoBehaviour
         int currentTime = time;
         timerText.text = time.ToString();
 
-        while (time == currentTime)
+        while (time == currentTime && !gameover)
         {
             yield return new WaitForSeconds(1);
             time++;
@@ -252,7 +252,7 @@ public class Game : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            NewGame();
+            //NewGame();
         }
         else if (!gameover)
         {
@@ -457,7 +457,7 @@ public class Game : MonoBehaviour
         board.Draw(state);
 
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         menu.SetActive(true);
         menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose.";
     }
