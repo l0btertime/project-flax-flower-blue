@@ -24,6 +24,8 @@ public class Game : MonoBehaviour
 
     public GameObject lightParticles;
     public GameObject darkParticles;
+
+    public Transform ghostHolder;
     
 
     //keeps the mine amount between 0 and the total area of the board
@@ -310,6 +312,8 @@ public class Game : MonoBehaviour
                 AudioManager.Play("Explode");
                 screenShake.Shake(0.4f, 1.2f);
                 Explode(cell);
+                ghostHolder.position = new Vector3(worldPosition.x, worldPosition.y, 0f);
+                ghostHolder.GetChild(0).gameObject.SetActive(true);
                 break;
 
             case Cell.Type.Empty:
