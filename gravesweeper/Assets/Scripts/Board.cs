@@ -171,14 +171,22 @@ public class Board : MonoBehaviour
         offset = 0.5f * (size - defaultSize);
         cellSize = scale;
     }
+
+    public void ClearBoard()
+    {
+        foreach(Transform child in this.transform) Destroy(child.gameObject);
+    }
+
     public void GenerateBoard(int width, int height)
     {
+        ClearBoard();
         tiles = new GameObject[width, height];
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
                 GameObject newTile = Instantiate(tileObject, CellToWorld(new Vector2Int(x,y)), tileObject.transform.rotation);
+                newTile.transform.SetParent(this.transform);
                 if (isDark(x, y)) SetTile(newTile, darkTiles.tileUnknown, false); 
                 else SetTile(newTile, lightTiles.tileUnknown, false);
                 newTile.transform.SetParent(this.transform);

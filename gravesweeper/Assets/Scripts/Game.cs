@@ -40,25 +40,46 @@ public class Game : MonoBehaviour
     private void FixSize()
     {
         float defaultSize = 16;//- padding;
-        float size = width;//- padding;
+        float size = Mathf.Min(width, height);//- padding;
         float scale = defaultSize / size;
         transform.GetChild(0).localScale = new Vector3(1, 1, 1) * scale;
         float offset = size - defaultSize;
         transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f + new Vector3(0, -1f, 0);
     }
-    private void Start()
+
+    public void SetDifficulty(int difficulty)
     {
-        /*
-        int size = Random.Range(1, 50);
-        width = size;
-        height = size;
-        mineCount = (int) ((float)size * (float)size * 0.3f);
-        */
-        //FixSize();
+        switch (difficulty)
+        {
+            case 0:
+                width = 8;
+                height = 8;
+                mineCount = 10;
+                break;
+            case 1:
+                width = 16;
+                height = 16;
+                mineCount = 40;
+                break;
+            case 2:
+                width = 30;
+                height = 30;
+                mineCount = 150;
+                break;
+            default:
+                width = 12;
+                height = 12;
+                mineCount = 12;
+                break;
+        }
         board.FixSize(Mathf.Max(width, height));
         board.GenerateBoard(width, height);
         NewGame();
+    }
 
+    private void Start()
+    {
+        SetDifficulty(0);
     }
 
     //state is set to an array of the specific width and height (can be set in unity)
