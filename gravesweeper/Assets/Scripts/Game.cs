@@ -449,7 +449,7 @@ public class Game : MonoBehaviour
         screenShake.Shake(0.4f, 1.2f);
         Vector3 worldPosition = (Vector3) board.CellToWorldCentered((Vector2Int) explodeCell.position);
         GameObject gh = Instantiate(ghostHolder, worldPosition, ghostHolder.transform.rotation);
-        gh.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        gh.transform.localScale = 0.5f * new Vector3(1.5f, 1.5f, 1.5f) * transform.GetChild(0).GetChild(0).localScale.x;
         Destroy(gh, 1.5f);
         gameover = true;
 
@@ -468,7 +468,8 @@ public class Game : MonoBehaviour
                 if (cell.type == Cell.Type.Mine && !cell.revealed && !cell.flagged)
                 {
                     gh = Instantiate(ghostHolder, board.CellToWorldCentered((Vector2Int) cell.position), ghostHolder.transform.rotation);
-                    gh.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    gh.transform.localScale = 0.5f * new Vector3(0.5f, 0.5f, 0.5f) * transform.GetChild(0).GetChild(0).localScale.x;
+
                     Destroy(gh, 1.5f);
                     cell.revealed = true;
                     state[x, y] = cell;
