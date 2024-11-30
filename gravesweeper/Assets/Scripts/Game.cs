@@ -14,18 +14,19 @@ public class Game : MonoBehaviour
     public GameObject menu;
     public ScreenShake screenShake;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI mineCountText;
 
     private Board board;
     private Cell[,] state;
     private bool gameover;
 
-    public int PPU;
-    public int padding;
+    private int flagCount = 0;
 
     public GameObject lightParticles;
     public GameObject darkParticles;
 
     public GameObject ghostHolder;
+    
     
 
     //keeps the mine amount between 0 and the total area of the board
@@ -77,6 +78,7 @@ public class Game : MonoBehaviour
         board.FixSize(Mathf.Max(width, height));
         board.GenerateBoard(width, height);
         NewGame();
+        mineCountText.text = "" + mineCount;
     }
 
     private void Start()
@@ -309,10 +311,26 @@ public class Game : MonoBehaviour
         {
             return;
         }
+        if (flagCount >= mineCount) return;
         if (cell.flagged) AudioManager.Play("Flag"); else AudioManager.Play("FlagDown");
         cell.flagged = !cell.flagged;
         state[cellPosition.x, cellPosition.y] = cell;
         board.Draw(state);
+        CountFlags();
+    }
+
+    private void CountFlags()
+    {
+        flagCount = 0;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Cell cell = state[x, y];
+                if (cell.flagged && !cell.revealed) flagCount++;
+            }
+        }
+        mineCountText.text = "" + (mineCount - flagCount);
     }
 
     //reveals a cell
@@ -352,6 +370,7 @@ public class Game : MonoBehaviour
                 CheckWinCondition();
                 break;
         }
+        CountFlags();
         
         board.Draw(state);
     }
