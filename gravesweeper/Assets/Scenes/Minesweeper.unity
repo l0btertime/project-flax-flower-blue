@@ -3387,7 +3387,6 @@ MonoBehaviour:
   padding: 2
   lightParticles: {fileID: 2024241852971591210, guid: 4d8f1e99534f83445b0357ffc8d4f490, type: 3}
   darkParticles: {fileID: 4597444591581805578, guid: e4b689aa16738734dbc8fb59cc86f690, type: 3}
-<<<<<<< HEAD
 --- !u!1 &1965338817
 GameObject:
   m_ObjectHideFlags: 0
@@ -3543,9 +3542,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965338817}
   m_CullTransparentMesh: 1
-=======
-  ghostHolder: {fileID: 2882912527121319841, guid: 36ec728602740b541883bd456a3b9269, type: 3}
->>>>>>> main
 --- !u!1 &1965555318
 GameObject:
   m_ObjectHideFlags: 0
