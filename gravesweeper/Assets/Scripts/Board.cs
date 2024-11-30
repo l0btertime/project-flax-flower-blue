@@ -129,6 +129,12 @@ public class Board : MonoBehaviour
         return worldPos;
     }
 
+    public Vector2 CellToWorldCentered(Vector2Int cellPos)
+    {
+        Vector2 worldPos = (cellSize * (Vector2)cellPos) + new Vector2(offset, offset - 1f) + 0.5f * new Vector2(cellSize, cellSize);
+        return worldPos;
+    }
+
     public GameObject GetTileObject(Vector2Int position)
     {
         return tiles[position.x, position.y];
