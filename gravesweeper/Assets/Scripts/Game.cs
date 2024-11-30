@@ -24,6 +24,8 @@ public class Game : MonoBehaviour
 
     public GameObject lightParticles;
     public GameObject darkParticles;
+
+    public GameObject ghostHolder;
     
 
     //keeps the mine amount between 0 and the total area of the board
@@ -91,7 +93,7 @@ public class Game : MonoBehaviour
         int currentTime = time;
         timerText.text = time.ToString();
 
-        while (time == currentTime)
+        while (time == currentTime && !gameover)
         {
             yield return new WaitForSeconds(1);
             time++;
@@ -250,7 +252,7 @@ public class Game : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            NewGame();
+            //NewGame();
         }
         else if (!gameover)
         {
@@ -298,7 +300,7 @@ public class Game : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int cellPosition = (Vector3Int) board.WorldToCell(worldPosition);
         Cell cell = GetCell(cellPosition.x, cellPosition.y);
-
+        
         if (cell.type == Cell.Type.Invalid || cell.revealed || cell.flagged)
         {
             return;
@@ -307,9 +309,7 @@ public class Game : MonoBehaviour
         switch (cell.type)
         {
             case Cell.Type.Mine:
-                AudioManager.Play("Explode");
-                screenShake.Shake(0.4f, 1.2f);
-                Explode(cell);
+                StartCoroutine("LoseSequence", cell);
                 break;
 
             case Cell.Type.Empty:
@@ -364,30 +364,7 @@ public class Game : MonoBehaviour
 
     //if a mine is clicked then the mine explodes, showing all other mines on the board
     //the user loses and the game ends
-    private void Explode(Cell cell)
-    {
-        menu.SetActive(true);
-        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose.";
-        gameover = true;
-
-        cell.revealed = true;
-        cell.exploded = true;
-        state[cell.position.x, cell.position.y] = cell;
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                cell = state[x, y];
-
-                if (cell.type == Cell.Type.Mine)
-                {
-                    cell.revealed = true;
-                    state[x, y] = cell;
-                }
-            }
-        }
-    }
+    
 
     //if all non-mine cells have been revealed then the user wins and the game ends
     //flags all mines on the board
@@ -443,5 +420,45 @@ public class Game : MonoBehaviour
     private bool IsValid(int x, int y)
     {
         return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    private IEnumerator LoseSequence(Cell explodeCell)
+    {
+        AudioManager.Play("Explode");
+        screenShake.Shake(0.4f, 1.2f);
+        Vector3 worldPosition = (Vector3) board.CellToWorldCentered((Vector2Int) explodeCell.position);
+        GameObject gh = Instantiate(ghostHolder, worldPosition, ghostHolder.transform.rotation);
+        gh.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        Destroy(gh, 1.5f);
+        gameover = true;
+
+        explodeCell.revealed = true;
+        state[explodeCell.position.x, explodeCell.position.y] = explodeCell;
+        board.Draw(state);
+
+        yield return new WaitForSeconds(0.5f);
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Cell cell = state[x, y];
+
+                if (cell.type == Cell.Type.Mine && !cell.revealed && !cell.flagged)
+                {
+                    gh = Instantiate(ghostHolder, board.CellToWorldCentered((Vector2Int) cell.position), ghostHolder.transform.rotation);
+                    gh.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    Destroy(gh, 1.5f);
+                    cell.revealed = true;
+                    state[x, y] = cell;
+                }
+            }
+        }
+        board.Draw(state);
+
+        
+        yield return new WaitForSeconds(1.5f);
+        menu.SetActive(true);
+        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Lose.";
     }
 }
