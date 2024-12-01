@@ -12,13 +12,13 @@ public class MuteButtonBehavior : MonoBehaviour
         {
             muted = false;
             GetComponent<Image>().sprite = unmutedSprite;
-            AudioManager.SetMasterVolume(0);
+            AudioManager.SetMasterVolume(1);
         }
         else
         {
             muted = true;
             GetComponent<Image>().sprite = mutedSprite;
-            AudioManager.SetMasterVolume(1);
+            AudioManager.SetMasterVolume(0);
         }
     }
 }

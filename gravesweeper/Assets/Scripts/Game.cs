@@ -15,7 +15,9 @@ public class Game : MonoBehaviour
     public GameObject menu;
     public ScreenShake screenShake;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI bestTimeText;
     public TextMeshProUGUI mineCountText;
+    public bool godMode = false;
 
     private Board board;
     private Cell[,] state;
@@ -28,6 +30,8 @@ public class Game : MonoBehaviour
 
     public GameObject ghostHolder;
     public int[] bestTimes;
+
+    public DataLoaderBehavior dataLoader;
     
     
 
@@ -82,8 +86,18 @@ public class Game : MonoBehaviour
         board.GenerateBoard(width, height);
         NewGame();
         mineCountText.text = "" + mineCount;
+        UpdateBestTime();
     }
 
+    private void UpdateBestTime()
+    {
+        if(bestTimes[difficulty] == -1)
+        {
+            bestTimeText.text = "NA";
+            return;
+        }
+        bestTimeText.text = "" + bestTimes[difficulty];
+    }
     private void Start()
     {
         SetDifficulty(0);
@@ -122,6 +136,7 @@ public class Game : MonoBehaviour
         while (time == currentTime && !gameover)
         {
             yield return new WaitForSeconds(1);
+            if (gameover) yield break;
             time++;
             currentTime = time;
             timerText.text = time.ToString();
@@ -351,6 +366,14 @@ public class Game : MonoBehaviour
         switch (cell.type)
         {
             case Cell.Type.Mine:
+                if (godMode)
+                {
+                    cell.flagged = true;
+                    state[cellPosition.x, cellPosition.y] = cell;
+                    board.Draw(state);
+                    CountFlags();
+                    break;
+                }
                 StartCoroutine("LoseSequence", cell);
                 break;
 
@@ -430,6 +453,10 @@ public class Game : MonoBehaviour
         menu.SetActive(true);
         menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
         gameover = true;
+       
+        bestTimes[difficulty] = time;
+        UpdateBestTime();
+        dataLoader.SaveData();
 
         for (int x = 0; x < width; x++)
         {
@@ -444,6 +471,7 @@ public class Game : MonoBehaviour
                 }
             }
         }
+        
     }
 
     //returns the cell clicked on if it's valid
