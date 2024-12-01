@@ -14,18 +14,19 @@ public class Game : MonoBehaviour
     public GameObject menu;
     public ScreenShake screenShake;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI mineCountText;
 
     private Board board;
     private Cell[,] state;
     private bool gameover;
 
-    public int PPU;
-    public int padding;
+    private int flagCount = 0;
 
     public GameObject lightParticles;
     public GameObject darkParticles;
 
     public GameObject ghostHolder;
+    
     
 
     //keeps the mine amount between 0 and the total area of the board
@@ -42,25 +43,47 @@ public class Game : MonoBehaviour
     private void FixSize()
     {
         float defaultSize = 16;//- padding;
-        float size = width;//- padding;
+        float size = Mathf.Min(width, height);//- padding;
         float scale = defaultSize / size;
         transform.GetChild(0).localScale = new Vector3(1, 1, 1) * scale;
         float offset = size - defaultSize;
         transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f + new Vector3(0, -1f, 0);
     }
-    private void Start()
+
+    public void SetDifficulty(int difficulty)
     {
-        /*
-        int size = Random.Range(1, 50);
-        width = size;
-        height = size;
-        mineCount = (int) ((float)size * (float)size * 0.3f);
-        */
-        //FixSize();
+        switch (difficulty)
+        {
+            case 0:
+                width = 8;
+                height = 8;
+                mineCount = 10;
+                break;
+            case 1:
+                width = 16;
+                height = 16;
+                mineCount = 40;
+                break;
+            case 2:
+                width = 30;
+                height = 30;
+                mineCount = 150;
+                break;
+            default:
+                width = 12;
+                height = 12;
+                mineCount = 12;
+                break;
+        }
         board.FixSize(Mathf.Max(width, height));
         board.GenerateBoard(width, height);
         NewGame();
+        mineCountText.text = "" + mineCount;
+    }
 
+    private void Start()
+    {
+        SetDifficulty(0);
     }
 
     //state is set to an array of the specific width and height (can be set in unity)
@@ -288,10 +311,26 @@ public class Game : MonoBehaviour
         {
             return;
         }
+        if (flagCount >= mineCount) return;
         if (cell.flagged) AudioManager.Play("Flag"); else AudioManager.Play("FlagDown");
         cell.flagged = !cell.flagged;
         state[cellPosition.x, cellPosition.y] = cell;
         board.Draw(state);
+        CountFlags();
+    }
+
+    private void CountFlags()
+    {
+        flagCount = 0;
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Cell cell = state[x, y];
+                if (cell.flagged && !cell.revealed) flagCount++;
+            }
+        }
+        mineCountText.text = "" + (mineCount - flagCount);
     }
 
     //reveals a cell
@@ -331,6 +370,7 @@ public class Game : MonoBehaviour
                 CheckWinCondition();
                 break;
         }
+        CountFlags();
         
         board.Draw(state);
     }
@@ -428,7 +468,7 @@ public class Game : MonoBehaviour
         screenShake.Shake(0.4f, 1.2f);
         Vector3 worldPosition = (Vector3) board.CellToWorldCentered((Vector2Int) explodeCell.position);
         GameObject gh = Instantiate(ghostHolder, worldPosition, ghostHolder.transform.rotation);
-        gh.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        gh.transform.localScale = 0.5f * new Vector3(1.5f, 1.5f, 1.5f) * transform.GetChild(0).GetChild(0).localScale.x;
         Destroy(gh, 1.5f);
         gameover = true;
 
@@ -447,7 +487,8 @@ public class Game : MonoBehaviour
                 if (cell.type == Cell.Type.Mine && !cell.revealed && !cell.flagged)
                 {
                     gh = Instantiate(ghostHolder, board.CellToWorldCentered((Vector2Int) cell.position), ghostHolder.transform.rotation);
-                    gh.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    gh.transform.localScale = 0.5f * new Vector3(0.5f, 0.5f, 0.5f) * transform.GetChild(0).GetChild(0).localScale.x;
+
                     Destroy(gh, 1.5f);
                     cell.revealed = true;
                     state[x, y] = cell;
