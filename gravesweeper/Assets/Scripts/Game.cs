@@ -6,6 +6,7 @@ using System;
 
 public class Game : MonoBehaviour
 {
+    public int difficulty = 0;
     public int width = 16;
     public int height = 16;
     public int mineCount = 32;
@@ -26,6 +27,7 @@ public class Game : MonoBehaviour
     public GameObject darkParticles;
 
     public GameObject ghostHolder;
+    public int[] bestTimes;
     
     
 
@@ -50,8 +52,9 @@ public class Game : MonoBehaviour
         transform.GetChild(0).localPosition = new Vector3(1, 1, 0) * offset / 2f + new Vector3(0, -1f, 0);
     }
 
-    public void SetDifficulty(int difficulty)
+    public void SetDifficulty(int diff)
     {
+        difficulty = diff;
         switch (difficulty)
         {
             case 0:
