@@ -9,18 +9,17 @@ public class Sound
     public string name;
     public AudioClip clip;
     public float volume = 1f;
-    public float pitch =1f;
+    public float pitch = 1f;
     public bool loop = false;
     public bool fadeOnStop = false;
     public bool StopOnLoad = true;
-    [HideInInspector]
     public AudioSource source;
     [HideInInspector]
     public Coroutine fade;
 
     public Sound()
     {
-        
+
     }
     public Sound(AudioClip ac, AudioSource aso, float v, float p, bool l)
     {
@@ -30,11 +29,22 @@ public class Sound
         pitch = p;
         loop = l;
     }
+
+    public void AddSoundComponent(GameObject go)
+    {
+        source = go.gameObject.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.loop = loop;
+    }
 }
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager sharedInstance;
+    [Range(0, 1)]
+    public float masterVolume = 1f;
     public List<Sound> Sounds = new List<Sound>();
     // Start is called before the first frame update
     private void Awake()
@@ -48,7 +58,7 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-
+        /*
         foreach(Sound s in Sounds)
         {
             s.source = this.gameObject.AddComponent<AudioSource>();
@@ -57,12 +67,21 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
+        */
     }
     void Start()
     {
         //Play("Music");
     }
 
+    public void SetMasterVolume(float vol)
+    {
+        foreach (AudioSource source in sharedInstance.GetComponents<AudioSource>())
+        {
+            source.volume = (source.volume / masterVolume) * Mathf.Clamp(vol, 0f, 1f);
+        }
+        masterVolume = Mathf.Clamp(vol, 0f, 1f);
+    }
     public static AudioSource GetSource(string name)
     {
         Sound s = sharedInstance.Sounds.Find(sound => sound.name == name);
@@ -71,18 +90,39 @@ public class AudioManager : MonoBehaviour
     public static void Play(string name)
     {
         Sound s = sharedInstance.Sounds.Find(sound => sound.name == name);
+        if (s.source == null)
+        {
+            s.AddSoundComponent(sharedInstance.gameObject);
+            s.source.volume = s.source.volume * sharedInstance.masterVolume;
+            s.source.Play();
+            if (!s.loop) Destroy(s.source, s.clip.length);
+        }
+        else
+        {
+            s.source.Play();
+        }
         s.source.Play();
     }
 
-
-    public static void Stop(string name)
+    // pausing has been temporarily removed as it really doesn't work with the new system
+    /* 
+    public static void Pause(string name)
     {
         Sound s = sharedInstance.Sounds.Find(sound => sound.name == name);
+        if (s.source == null) return;
+        s.source.Stop();
+    }
+    */
+
+    public static void Stop(string name) {
+        Sound s = sharedInstance.Sounds.Find(sound => sound.name == name);
+        if (s.source == null) return;
         if (!s.fadeOnStop)
         {
-            s.source.Stop();
+            Destroy(s.source);
+            s.source = null;
         }
-        else if(s.fade == null)
+        else if (s.fade == null)
         {
             s.fade = sharedInstance.StartCoroutine("FadeOut", s);
         }
@@ -95,6 +135,16 @@ public class AudioManager : MonoBehaviour
             s.source.Stop();
         }
     }
+    /*
+    public static void PauseAllSounds()
+    {
+        foreach (Sound s in sharedInstance.Sounds)
+        {
+            s.source.Pause();
+        }
+    }
+    */
+
 
     IEnumerator FadeOut(Sound s)
     {
@@ -105,8 +155,8 @@ public class AudioManager : MonoBehaviour
         }
     
         s.fade = null;
-        s.source.Stop();
-        s.source.volume = s.volume;
+        Destroy(s.source);
+        s.source = null;
         yield break;
     }
 
