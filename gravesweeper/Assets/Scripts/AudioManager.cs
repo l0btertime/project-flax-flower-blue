@@ -74,13 +74,13 @@ public class AudioManager : MonoBehaviour
         //Play("Music");
     }
 
-    public void SetMasterVolume(float vol)
+    public static void SetMasterVolume(float vol)
     {
         foreach (AudioSource source in sharedInstance.GetComponents<AudioSource>())
         {
-            source.volume = (source.volume / masterVolume) * Mathf.Clamp(vol, 0f, 1f);
+            source.volume = (source.volume / sharedInstance.masterVolume) * Mathf.Clamp(vol, 0f, 1f);
         }
-        masterVolume = Mathf.Clamp(vol, 0f, 1f);
+        sharedInstance.masterVolume = Mathf.Clamp(vol, 0f, 1f);
     }
     public static AudioSource GetSource(string name)
     {
@@ -164,7 +164,7 @@ public class AudioManager : MonoBehaviour
     {
         foreach(Sound s in Sounds)
         {
-            if (s.StopOnLoad) s.source.Stop();
+            if (s.StopOnLoad && s.source != null) s.source.Stop();
         }
     }
 
