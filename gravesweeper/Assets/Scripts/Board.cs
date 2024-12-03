@@ -141,8 +141,10 @@ public class Board : MonoBehaviour
     }
     public void SetTile(Vector2Int position, Sprite tileSprite, bool underground)
     {
-        SpriteRenderer r = GetTileObject(position).GetComponent<SpriteRenderer>();
+        if (position.x == 0) Debug.Log("yeah");
+        SpriteRenderer r = GetTileObject(position).transform.GetChild(0).GetComponent<SpriteRenderer>();
         r.sprite = tileSprite;
+
         if (underground)
         {
            // r.sortingLayerID = 1;
@@ -157,7 +159,7 @@ public class Board : MonoBehaviour
 
     public void SetTile(GameObject tile, Sprite tileSprite, bool underground)
     {
-        SpriteRenderer r = tile.GetComponent<SpriteRenderer>();
+        SpriteRenderer r = tile.transform.GetChild(0).GetComponent<SpriteRenderer>();
         r.sprite = tileSprite;
         if (underground)
         {
@@ -197,7 +199,7 @@ public class Board : MonoBehaviour
                 else SetTile(newTile, lightTiles.tileUnknown, false);
                 newTile.transform.SetParent(this.transform);
                 newTile.transform.localScale = cellSize * new Vector3(1, 1, 1);
-                newTile.GetComponent<SpriteRenderer>().sortingOrder = (height - y) + (width - x);
+                newTile.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = (height - y) + (width - x);
                 tiles[x, y] = newTile;
             }
         }

@@ -449,15 +449,12 @@ public class Game : MonoBehaviour
             }
         }
 
-        AudioManager.Play("Win");
-        menu.SetActive(true);
-        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
-        gameover = true;
-       
-        bestTimes[difficulty] = time;
-        UpdateBestTime();
-        dataLoader.SaveData();
+        StartCoroutine("WinSequence");
+        
+    }
 
+    private IEnumerator WinSequence()
+    {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -471,7 +468,31 @@ public class Game : MonoBehaviour
                 }
             }
         }
-        
+
+        AudioManager.Play("Win");
+
+        gameover = true;
+
+        bestTimes[difficulty] = time;
+        UpdateBestTime();
+        dataLoader.SaveData();
+        yield return new WaitForSeconds(0.1f);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Cell cell = state[x, y];
+                if (cell.revealed)
+                {
+                    board.SetTile(new Vector2Int(x, y), board.isDark(x, y) ? board.lightTiles.tileUnknown : board.darkTiles.tileUnknown, false);
+                }
+                board.tiles[x, y].transform.GetChild(0).GetComponent<Animator>().SetTrigger("Pop");
+            }
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        menu.SetActive(true);
+        menu.GetComponentInChildren<TextMeshProUGUI>().text = "You Win!";
     }
 
     //returns the cell clicked on if it's valid
