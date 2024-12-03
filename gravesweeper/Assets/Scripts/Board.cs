@@ -141,7 +141,6 @@ public class Board : MonoBehaviour
     }
     public void SetTile(Vector2Int position, Sprite tileSprite, bool underground)
     {
-        if (position.x == 0) Debug.Log("yeah");
         SpriteRenderer r = GetTileObject(position).transform.GetChild(0).GetComponent<SpriteRenderer>();
         r.sprite = tileSprite;
 
