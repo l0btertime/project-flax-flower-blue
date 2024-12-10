@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 28715777b7768934991e9500a691c034
+guid: eb3c1ba73c21fb24392b485634b6b09a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8963046643449956250
-    second: TileExploded_0
+      213: -5723023506263873611
+    second: TileMine_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TileExploded_0
+      name: TileMine_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
         height: 16
-      alignment: 6
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 66878e7e09cdc9380800000000000000
-      internalID: -8963046643449956250
+      spriteID: 5b76ee3617cb390b0800000000000000
+      internalID: -5723023506263873611
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 16e028c0999e29348a8d24c8562e1519
+    spriteID: 7d0e8483dfda76c4392809d4fdf8f3e2
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TileExploded_0: -8963046643449956250
+      TileMine_0: -5723023506263873611
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
