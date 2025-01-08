@@ -329,6 +329,7 @@ public class Game : MonoBehaviour
         {
             return;
         }
+
         if (flagCount >= mineCount && !cell.flagged) return;
         if (cell.flagged) AudioManager.Play("Flag"); else AudioManager.Play("FlagDown");
         cell.flagged = !cell.flagged;
@@ -473,7 +474,7 @@ public class Game : MonoBehaviour
 
         gameover = true;
 
-        if (time < bestTimes[difficulty])
+        if (bestTimes[difficulty] == -1f || time < bestTimes[difficulty])
         {
             bestTimes[difficulty] = time;
             UpdateBestTime();
